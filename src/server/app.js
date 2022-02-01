@@ -15,6 +15,7 @@ module.exports = function() {
   require('handlebars-helpers')({handlebars});
   require('./views/helpers/handlebars')(handlebars);
 
+  const routes = require('./views/routes');
   const app = express();
 
   const defaultConfig = require(path.join(__dirname, 'config', 'index.json'));
@@ -29,7 +30,10 @@ module.exports = function() {
 
   app.engine('hbs', hbs.engine);
 
+  app.use(express.static(path.join(__dirname, '/../../public')));
   app.use(bodyParser.json());
+
+  app.use('/', routes);
 
   return {
     app,

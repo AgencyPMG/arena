@@ -23,7 +23,7 @@
                 class="active"
               {{/eq}}>
 
-              <a href="{{ ../basePath }}/{{ encodeURI ../queueHost }}/{{ encodeURI ../queueName }}/{{ ../state }}?page={{ this }}&amp;pageSize={{ ../pageSize }}">{{ this }}</a>
+              <a href="{{ basePath }}/{{ encodeURI ../queueHost }}/{{ encodeURI ../queueName }}/{{ ../state }}?page={{ this }}&amp;pageSize={{ ../pageSize }}">{{ this }}</a>
             </li>
           {{/each}}
           <li
@@ -38,8 +38,6 @@
           </li>
         </ul>
       </nav>
-    {{else}}
-      Bee-queue does not support pagination for {{ state }} queues &mdash; currently displaying up to <b>{{ pageSize }} jobs</b>. To change count, use "Size" dropdown.
     {{/unless}}
   </div>
   <div class="col-sm-6 text-right">
@@ -52,16 +50,11 @@
       </button>
     {{/eq}}
 
+    {{#unless disablePagination}}
       <div class="btn-group">
-        {{#if disablePagination}}
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Size <span class="caret"></span>
-          </button>
-        {{else}}
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Page Size <span class="caret"></span>
-          </button>
-        {{/if}}
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Page Size <span class="caret"></span>
+        </button>
         <ul class="dropdown-menu">
           <li><a href="{{ basePath }}/{{ encodeURI queueHost }}/{{ encodeURI queueName }}/{{ state }}?page={{ currentPage }}&amp;pageSize={{ pageSize }}">{{ pageSize }} jobs</a></li>
           <li role="separator" class="divider"></li>
@@ -71,6 +64,7 @@
           <li><a href="{{ basePath }}/{{ encodeURI queueHost }}/{{ encodeURI queueName }}/{{ state }}?page={{ adjustedPage currentPage pageSize 1000 }}&amp;pageSize=1000">1000 jobs</a></li>
         </ul>
       </div>
+    {{/unless}}
   </div>
 </div>
 
@@ -108,8 +102,8 @@
                 </span>
               </h4>
             </a>
-            <div id="collapse{{encodeIdAttr this.id}}" class="collapse">
-              {{~> dashboard/jobDetails this basePath=../basePath displayJobInline=true queueName=../queueName queueHost=../queueHost jobState=../state }}
+            <div id="collapse{{this.id}}" class="collapse">
+              {{> dashboard/jobDetails this basePath=../basePath displayJobInline=true queueName=../queueName queueHost=../queueHost jobState=../state }}
             </div>
           </li>
         {{/each}}
