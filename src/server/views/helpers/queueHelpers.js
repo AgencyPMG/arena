@@ -73,18 +73,24 @@ const Helpers = {
    * @returns {Array}
    */
   getGroupJobs: async function (queue, stateTypes) {
-    const groups = await queue.getGroups();
-    let groupJobs = [];
-    for (const group of groups) {
-      const currentGroupJobs = await queue.getGroupJobs(group.id);
-      for (const job of currentGroupJobs) {
-        const jobState = await job.getState();
-        if (stateTypes.includes(jobState)) {
-          groupJobs.push(job);
+    try {
+      const groups = await queue.getGroups();
+      let groupJobs = [];
+      for (const group of groups) {
+        if (!group) continue;
+        const currentGroupJobs = await queue.getGroupJobs(group.id);
+        for (const job of currentGroupJobs) {
+          const jobState = await job.getState();
+          if (stateTypes.includes(jobState)) {
+            groupJobs.push(job);
+          }
         }
       }
+      return groupJobs;
+    } catch (error) {
+      console.error('An error occurred:', error);
+      return [];
     }
-    return groupJobs;
   },
 
   isPaused: async function (queue) {
